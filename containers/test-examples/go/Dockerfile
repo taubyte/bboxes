@@ -39,7 +39,10 @@ RUN echo $PATH
 
 ENV GOPATH=/go
 
-RUN mkdir /src /out
+RUN mkdir /src /out /sdk
 
 VOLUME /src
 VOLUME /out
+VOLUME /sdk
+
+

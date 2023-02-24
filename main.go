@@ -11,12 +11,19 @@ import (
 //go:generate bash containers/build.sh
 
 func main() {
-	builds, err := setDefaultToBuild(true, true, true)
-	if err != nil {
-		panic(err)
-	}
+	// builds, err := setDefaultToBuild(true, true, true)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	err = build.Build(false, true, builds)
+	err := build.Build(false, false, []build.Image{
+		build.CustomImage{
+			TarPath:      "/home/tafkhan/Documents/Work/Taubyte/Repos/bboxes/containers/_builds/go_test_examples.tar",
+			Organization: "taubyte",
+			Repo:         "go-wasi",
+			Version:      "test-examples",
+		},
+	})
 	if err != nil {
 		panic(err)
 	}
