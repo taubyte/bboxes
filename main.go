@@ -16,7 +16,7 @@ func main() {
 	// 	panic(err)
 	// }
 
-	err := build.Build(false, false, []build.Image{
+	err := build.Build(true, false, []build.Image{
 		build.CustomImage{
 			TarPath:      "/home/tafkhan/Documents/Work/Taubyte/Repos/bboxes/containers/_builds/go_test_examples.tar",
 			Organization: "taubyte",

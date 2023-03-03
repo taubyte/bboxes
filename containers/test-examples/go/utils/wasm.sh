@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Uncomment to see commands
+# set -x
+
 . /utils/common.sh
 
 export CGO_ENABLED=1
@@ -18,7 +22,7 @@ build() {
         mv .git .git.mv
 
         mkdir lib
-        mv *.go lib/
+        mv $(find . -type f -not -name "go.mod" -not -name "go.sum" -not -path "./.taubyte/*" -not -path "./taubyte/*" -not -path "./lib/*") lib/
 
         # TODO INJECT
         # go: finding module for package github.com/mailru/easyjson

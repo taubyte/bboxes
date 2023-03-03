@@ -11,6 +11,7 @@ build() {
         [ "${filename}" != "" ] || filename="./"
 
         echo "Building ${filename} with as-v1"
+        mv *.rs lib.rs
     
         cargo wasi build --release
 

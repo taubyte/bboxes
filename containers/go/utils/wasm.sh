@@ -18,7 +18,7 @@ build() {
         mv .git .git.mv
 
         mkdir lib
-        mv *.go lib/
+        mv $(find . -type f -not -name "go.mod" -not -name "go.sum" -not -path "./.taubyte/*" -not -path "./taubyte/*" -not -path "./lib/*") lib/
 
         MODNAME="$(awk '/^module/ { print $2}' go.mod)"
 
