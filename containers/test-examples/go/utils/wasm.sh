@@ -32,14 +32,13 @@ build() {
         # Grab module name from go.mod
         MODNAME="$(awk '/^module/ { print $2}' go.mod)"
         sed "s/@pkg@/${MODNAME}/g" /utils/_lib_main.go > main.go
-        go mod tidy
-
         (
             echo "Replacing Local SDKs"
             echo "replace bitbucket.org/taubyte/go-ray => ${SDK}/go-ray" >> go.mod
             echo "replace github.com/taubyte/go-sdk-symbols => ${SDK}/go-sdk-symbols" >> go.mod
             echo "replace github.com/taubyte/go-sdk-smartops => ${SDK}/go-sdk-smartops" >> go.mod
             echo "replace github.com/taubyte/go-sdk => ${SDK}/go-sdk" >> go.mod
+            echo "replace bitbucket.org/taubyte/go-lit => ${SDK}/go-lit" >> go.mod
         )
 
         # Generate .s files,  need to confirm working

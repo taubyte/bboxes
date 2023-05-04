@@ -7,6 +7,8 @@ RUN apk add lld
 
 RUN apk add musl-dev
 
+RUN apk add binaryen
+
 RUN apk add compiler-rt compiler-rt-static
 
 RUN rustup target add wasm32-wasi

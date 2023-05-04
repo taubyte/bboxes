@@ -253,10 +253,12 @@ github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.4 h1:wZRexSlwd7ZXfKINDLsO4r7WBt3gTKONc6K/VesHvHM=
-github.com/taubyte/go-simple-container v0.4.0 h1:VsID2Rk2qyj8p5aQ1VXr88a68mYpZM8oyDHGSP/qLrs=
-github.com/taubyte/go-simple-container v0.4.0/go.mod h1:7nFas4yr17+jFUWmQLBNZ//s40Y+7/iiJhJkXAJDGiY=
+github.com/taubyte/go-simple-container v0.4.2 h1:WMC/kgubrQiiDzMfLs3X0WcAMl9hkVOyxpOHjMPXjtg=
+github.com/taubyte/go-simple-container v0.4.2/go.mod h1:7nFas4yr17+jFUWmQLBNZ//s40Y+7/iiJhJkXAJDGiY=
 github.com/taubyte/go-simple-git v0.2.5 h1:ESwhDVHGF0oVPFtZvCS5SzrugjCpK0KKaQIQC6AxzDE=
 github.com/taubyte/go-simple-git v0.2.5/go.mod h1:tPUTQo7GPNEYOV1kRMqWLv3cihLN4MKyK1kW36xr9wk=
+github.com/taubyte/go-specs v0.9.5 h1:kN+86LqbSw8Y2Y1OJrmmgYl3pMDw4PD0OaUYb0dODcA=
+github.com/taubyte/go-specs v0.9.5/go.mod h1:OLj64wgg6hEf/xa5v/yWFPNoNQSK2Pf99e6KnEMW2ZI=
 github.com/taubyte/utils v0.1.1 h1:Ynfj6fRexSvyMdO5C0qwdSlR1gzl5AqWwp1XV3i2HZ0=
 github.com/taubyte/utils v0.1.1/go.mod h1:1pM0lhVAYAysBQ3Zg0EYjeETBEMQn0DquwfiBbV+mHo=
 github.com/xanzy/ssh-agent v0.3.0 h1:wUMzuKtKilRgBAD1sUb8gOwwRr2FGoBVumcjoOACClI=

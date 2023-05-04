@@ -4,11 +4,9 @@ go 1.19
 
 require (
 	github.com/pterm/pterm v0.12.33
-	github.com/taubyte/go-simple-container v0.4.0
-	github.com/taubyte/go-specs v0.9.4
+	github.com/taubyte/go-simple-container v0.4.2
+	github.com/taubyte/go-specs v0.9.5
 )
-
-replace github.com/taubyte/go-specs => ../go-specs
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect

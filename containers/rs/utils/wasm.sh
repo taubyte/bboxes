@@ -16,8 +16,6 @@ build() {
 
         cp $(echo target/wasm32-wasi/release/*.wasi.wasm | head -1) ${OUT}/artifact.wasm
 
-        #find . -name "*.wasi.wasm" -exec cp {} ${OUT}/artifact.wasm \;
-
         cd -
 
         exit $ret
