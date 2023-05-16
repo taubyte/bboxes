@@ -74,8 +74,8 @@ func assemblyImage(release releaseType, version string) build.Image {
 }
 
 func main() {
-	err := build.Build(false, false, []build.Image{
-		goImage(test_examples, "testing"),
+	err := build.Build(true, true, []build.Image{
+		goImage(production, "v0"),
 	})
 	if err != nil {
 		panic(err)
