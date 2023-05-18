@@ -55,6 +55,15 @@ func goImage(release releaseType, version string) build.Image {
 	}
 }
 
+func goPkgImage(release releaseType, version string) build.Image {
+	return build.CustomImage{
+		TarPath:      path.Join(wd, buildsRelDir, release.String(), "go-lib.tar"),
+		Organization: "taubyte",
+		Repo:         "go-wasi-lib",
+		Version:      version,
+	}
+}
+
 func rustImage(release releaseType, version string) build.Image {
 	return build.CustomImage{
 		TarPath:      path.Join(wd, buildsRelDir, release.String(), "rs.tar"),
@@ -75,7 +84,7 @@ func assemblyImage(release releaseType, version string) build.Image {
 
 func main() {
 	err := build.Build(true, true, []build.Image{
-		goImage(production, "v0"),
+		goPkgImage(production, "v0"),
 	})
 	if err != nil {
 		panic(err)

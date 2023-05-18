@@ -14,7 +14,7 @@ build() {
         filename="$1"
         [ "${filename}" != "" ] || filename="./"
 
-        echo "Building ${filename} with taubyte/go-was:v0"
+        echo "Building ${filename} with taubyte/go-wasm"
         mv .git .git.mv
 
         mkdir lib
@@ -73,7 +73,7 @@ debug_build() {
         filename="$1"
         [ "${filename}" != "" ] || filename="./"
 
-        echo "Building ${filename} with taubyte/go-was:v0"
+        echo "Building ${filename} with taubyte/go-wasm"
         mv .git .git.mv
 
         mkdir lib
