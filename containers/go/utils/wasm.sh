@@ -22,11 +22,15 @@ build() {
 
         MODNAME="$(awk '/^module/ { print $2}' go.mod)"
 
-        sed "s/@pkg@/${MODNAME}/g" /utils/_lib_main.go > main.go
+        sed "s/@pkg@/${MODNAME}/g" /utils/_lib_main.go_ > main.go
         go mod tidy
 
         # Generate .s files,  need to confirm working
-        go run /utils
+        (
+            cd /utils
+            go run . ${CODE}/lib lib
+        )
+    
     
         go generate ./...
         go mod tidy

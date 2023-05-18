@@ -31,7 +31,7 @@ build() {
 
         # Grab module name from go.mod
         MODNAME="$(awk '/^module/ { print $2}' go.mod)"
-        sed "s/@pkg@/${MODNAME}/g" /utils/_lib_main.go > main.go
+        sed "s/@pkg@/${MODNAME}/g" /utils/_lib_main.go_ > main.go
         (
             echo "Replacing Local SDKs"
             echo "replace bitbucket.org/taubyte/go-ray => ${SDK}/go-ray" >> go.mod
@@ -42,10 +42,14 @@ build() {
         )
 
         # Generate .s files,  need to confirm working
-        go run /utils
+        CODE="$(pwd)"
+        (
+            cd /utils
+            go run . ${CODE}/lib lib
+        )
     
-        go generate ./...
         go mod tidy
+        go generate ./...
 
 
                

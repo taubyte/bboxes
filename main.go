@@ -55,7 +55,7 @@ func goImage(release releaseType, version string) build.Image {
 	}
 }
 
-func goPkgImage(release releaseType, version string) build.Image {
+func goLibImage(release releaseType, version string) build.Image {
 	return build.CustomImage{
 		TarPath:      path.Join(wd, buildsRelDir, release.String(), "go-lib.tar"),
 		Organization: "taubyte",
@@ -84,7 +84,7 @@ func assemblyImage(release releaseType, version string) build.Image {
 
 func main() {
 	err := build.Build(true, true, []build.Image{
-		goPkgImage(production, "v0"),
+		goImage(production, "v0"),
 	})
 	if err != nil {
 		panic(err)
