@@ -1,126 +1,99 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
-	"path"
+	"strings"
 
 	"github.com/taubyte/bboxes/build"
 )
 
-//go:generate bash containers/build.sh
+const usage = `Usage: bboxes <build|test|publish> <language> [sub] <version>
 
-var (
-	wd string
-)
+  Subcommands:
+    build    Build the image only (tag with version).
+    test     Build then run a smoke test.
+    publish  Build and push to the registry.
 
-func init() {
-	var err error
-	wd, err = os.Getwd()
+  Arguments:
+    language   go | rs | as
+    sub        func | lib  (only for go; default func)
+    version    e.g. v0.1.0
+
+Examples:
+  bboxes build go func v0.1.0
+  bboxes publish go lib v0.2.0
+  bboxes test rs v0.1.0
+`
+
+func main() {
+	if len(os.Args) < 4 {
+		fmt.Fprint(os.Stderr, usage)
+		os.Exit(1)
+	}
+	subcmd := strings.ToLower(os.Args[1])
+	lang := strings.ToLower(os.Args[2])
+	arg3 := strings.ToLower(os.Args[3])
+
+	var sub, version string
+	if arg3 == "func" || arg3 == "lib" {
+		// bboxes build go func v0.1.0
+		if len(os.Args) < 5 {
+			fmt.Fprint(os.Stderr, usage)
+			os.Exit(1)
+		}
+		sub = arg3
+		version = os.Args[4]
+	} else {
+		// bboxes build rs v0.1.0  (sub defaults to func)
+		sub = "func"
+		version = arg3
+	}
+
+	if subcmd != "build" && subcmd != "test" && subcmd != "publish" {
+		fmt.Fprintf(os.Stderr, "unknown subcommand %q\n%s", subcmd, usage)
+		os.Exit(1)
+	}
+	if lang != "go" && lang != "rs" && lang != "as" {
+		fmt.Fprintf(os.Stderr, "language must be go, rs, or as (got %q)\n", lang)
+		os.Exit(1)
+	}
+	if lang != "go" {
+		sub = "func"
+	} else if sub != "func" && sub != "lib" {
+		fmt.Fprintf(os.Stderr, "sub must be func or lib for go (got %q)\n", sub)
+		os.Exit(1)
+	}
+
+	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
-}
 
-type releaseType string
+	spec := build.Spec{Lang: lang, Sub: sub, Version: version}
+	if spec.LangDir() == "" {
+		fmt.Fprintf(os.Stderr, "invalid lang/sub: %s/%s\n", lang, sub)
+		os.Exit(1)
+	}
 
-const (
-	production    releaseType = "production"
-	test_examples releaseType = "test_examples"
-
-	buildsRelDir = "containers/_builds"
-)
-
-func (r releaseType) String() string {
-	return string(r)
-}
-
-func (r releaseType) Version() string {
-	switch r {
-	case production:
-		return "v0"
-	case test_examples:
-		return "test-examples"
-	default:
-		return "testing"
+	ctx := context.Background()
+	switch subcmd {
+	case "build":
+		if err := build.BuildOne(ctx, wd, spec, false); err != nil {
+			log.Fatal(err)
+		}
+	case "publish":
+		if err := build.BuildOne(ctx, wd, spec, true); err != nil {
+			log.Fatal(err)
+		}
+	case "test":
+		if err := build.BuildOne(ctx, wd, spec, false); err != nil {
+			log.Fatal(err)
+		}
+		if err := build.TestOne(ctx, spec); err != nil {
+			log.Fatal(err)
+		}
 	}
 }
-
-func goImage(release releaseType, version string) build.Image {
-	return build.CustomImage{
-		TarPath:      path.Join(wd, buildsRelDir, release.String(), "go.tar"),
-		Organization: "taubyte",
-		Repo:         "go-wasi",
-		Version:      version,
-	}
-}
-
-func goLibImage(release releaseType, version string) build.Image {
-	return build.CustomImage{
-		TarPath:      path.Join(wd, buildsRelDir, release.String(), "go-lib.tar"),
-		Organization: "taubyte",
-		Repo:         "go-wasi-lib",
-		Version:      version,
-	}
-}
-
-func rustImage(release releaseType, version string) build.Image {
-	return build.CustomImage{
-		TarPath:      path.Join(wd, buildsRelDir, release.String(), "rs.tar"),
-		Organization: "taubyte",
-		Repo:         "rust-wasi",
-		Version:      version,
-	}
-}
-
-func assemblyImage(release releaseType, version string) build.Image {
-	return build.CustomImage{
-		TarPath:      path.Join(wd, buildsRelDir, release.String(), "rs.tar"),
-		Organization: "taubyte",
-		Repo:         "assembly-script-wasi",
-		Version:      version,
-	}
-}
-
-func main() {
-	err := build.Build(true, true, []build.Image{
-		goImage(production, "v0"),
-	})
-	if err != nil {
-		panic(err)
-	}
-}
-
-// func setDefaultToBuild(rust, golang, as bool) (toBuild []build.Image, err error) {
-// 	wd, err := os.Getwd()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	wd = path.Join(wd, "containers")
-// 	if rust {
-// 		_build, err := build.New(wasm.Rust, wd)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		toBuild = append(toBuild, _build)
-// 	}
-
-// 	if golang {
-// 		_build, err := build.New(wasm.Go, wd)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		toBuild = append(toBuild, _build)
-// 	}
-
-// 	if as {
-// 		_build, err := build.New(wasm.AssemblyScript, wd)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		toBuild = append(toBuild, _build)
-// 	}
-
-// 	return
-// }

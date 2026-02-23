@@ -1,36 +1,22 @@
 package build
 
 import (
-	"fmt"
+	"os"
 	"os/exec"
-
-	wasmSpec "github.com/taubyte/go-specs/builders/wasm"
-	imageSpec "github.com/taubyte/go-specs/builders/wasm/images"
 )
 
-func version(lang wasmSpec.SupportedLanguage) (string, error) {
-	switch lang {
-	case wasmSpec.Go:
-		return goImageVersion, nil
-	case wasmSpec.AssemblyScript:
-		return assemblyScriptVersion, nil
-	case wasmSpec.Rust:
-		return rustImageVersion, nil
-	default:
-		return "", fmt.Errorf("`%s` is not a supported language", lang)
+// Login runs docker login using DOCKER_USER and DOCKER_TOKEN (or DOCKER_PASSWORD) env vars.
+func Login() error {
+	user := os.Getenv("DOCKER_USER")
+	if user == "" {
+		user = os.Getenv("DOCKER_USERNAME")
 	}
-}
-
-func login() error {
-	user, err := imageSpec.UserEnvVar.Get()
-	if err != nil {
-		return err
+	token := os.Getenv("DOCKER_TOKEN")
+	if token == "" {
+		token = os.Getenv("DOCKER_PASSWORD")
 	}
-
-	token, err := imageSpec.TokenEnvVar.Get()
-	if err != nil {
-		return err
+	if user == "" || token == "" {
+		return exec.Command("docker", "login").Run() // use default docker config
 	}
-
-	return exec.Command("docker", []string{"login", "-u", user, "-p", token}...).Run()
+	return exec.Command("docker", "login", "-u", user, "-p", token).Run()
 }
