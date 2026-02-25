@@ -3,14 +3,14 @@ FROM debian:stable-slim
 RUN apt-get clean && apt-get update --fix-missing && \
     apt-get install -y wget gcc gcc-avr avr-libc
 
-ENV GO_RELEASE=1.19
-RUN wget https://dl.google.com/go/go${GO_RELEASE}.linux-amd64.tar.gz && \
+ENV GO_RELEASE=1.24.13
+RUN wget https://go.dev/dl/go${GO_RELEASE}.linux-amd64.tar.gz -O go${GO_RELEASE}.linux-amd64.tar.gz && \
     tar xfv go${GO_RELEASE}.linux-amd64.tar.gz -C /usr/local && \
     rm go${GO_RELEASE}.linux-amd64.tar.gz && \
     find /usr/local/go -mindepth 1 -maxdepth 1 ! -name 'src' ! -name 'VERSION' ! -name 'bin' ! -name 'pkg' -exec rm -rf {} +
 ENV PATH=${PATH}:/usr/local/go/bin
 
-ENV TINYGO_RELEASE=0.26.0
+ENV TINYGO_RELEASE=0.40.1
 RUN wget https://github.com/tinygo-org/tinygo/releases/download/v${TINYGO_RELEASE}/tinygo${TINYGO_RELEASE}.linux-amd64.tar.gz && \
     tar xfv tinygo${TINYGO_RELEASE}.linux-amd64.tar.gz -C /usr/local && \
     rm -rf /usr/local/tinygo/src/device/{sam,stm32,nxp,nrf,avr,esp,rp} && \
@@ -33,7 +33,10 @@ RUN git lfs install
 
 COPY ./utils /utils
 
-ENV PATH=${PATH}:/tools:/usr/bin:/bin
+WORKDIR /utils
+RUN go build -o /utils/rewrite-package ./rewrite_package
+
+ENV PATH=${PATH}:/utils:/tools:/usr/bin:/bin
 
 RUN echo $PATH
 

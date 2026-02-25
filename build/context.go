@@ -13,7 +13,7 @@ import (
 func PrepareContext(wd string, spec Spec) (contextDir string, cleanup func(), err error) {
 	langDir := spec.LangDir()
 	if langDir == "" {
-		return "", nil, fmt.Errorf("invalid lang/sub: %s/%s", spec.Lang, spec.Sub)
+		return "", nil, fmt.Errorf("invalid lang: %s", spec.Lang)
 	}
 	tmp, err := os.MkdirTemp("", "bboxes-build-")
 	if err != nil {
