@@ -10,7 +10,7 @@ Build, test, and publish Taubyte WASI container images. Uses a directory build c
 ## Usage
 
 ```text
-bboxes <build|test|publish> <language> [sub] <version>
+bboxes <build|test|publish> <language> <version>
 ```
 
 | Subcommand | Description |
@@ -22,26 +22,26 @@ bboxes <build|test|publish> <language> [sub] <version>
 | Argument  | Values | Notes |
 |-----------|--------|--------|
 | `language` | `go`, `rs`, `as` | Target runtime. |
-| `sub`      | `func`, `lib`     | Only for `go`; use `func` for go-wasi, `lib` for go-wasi-lib. For `rs` and `as`, omit (defaults to func). |
 | `version`  | e.g. `v0.1.0`    | Image tag. |
 
 ### Image mapping
 
-| language | sub  | Image (org/repo)           |
-|----------|------|----------------------------|
-| go       | func | taubyte/go-wasi            |
-| go       | lib  | taubyte/go-wasi-lib        |
-| rs       | func | taubyte/rust-wasi          |
-| as       | func | taubyte/assembly-script-wasi |
+| language | Image (org/repo)           |
+|----------|----------------------------|
+| go       | taubyte/go-wasi            |
+| rs       | taubyte/rust-wasi          |
+| as       | taubyte/assembly-script-wasi |
+
+Go builds **reactor-style** WASM modules: no `_start`/main, only exported functions the host calls (`//export`).
 
 ### Examples
 
 ```bash
-# Build Go (func) image and tag as v0.1.0
-bboxes build go func v0.1.0
+# Build Go image and tag as v0.1.0
+bboxes build go v0.1.0
 
-# Publish Go (lib) image
-bboxes publish go lib v0.2.0
+# Publish Go image
+bboxes publish go v0.2.0
 
 # Build Rust image and run smoke test
 bboxes test rs v0.1.0
@@ -65,11 +65,11 @@ go build -o bboxes .
 Run directly:
 
 ```bash
-go run . build go func v0.1.0
+go run . build go v0.1.0
 ```
 
 ## How it works
 
-1. **Context:** For the chosen language (and sub for go), the tool copies `containers/<lang-dir>` and `containers/common` into a temporary directory (lang first, then common), and writes the language’s Dockerfile as `Dockerfile`.
+1. **Context:** For the chosen language, the tool copies `containers/<lang-dir>` and `containers/common` into a temporary directory (lang first, then common), and writes the language’s Dockerfile as `Dockerfile`.
 2. **Build:** It runs `docker build` with that directory as the build context (no tarballs).
 3. **Publish:** If you use `publish`, it runs `docker login` (if needed) and then `docker push` for the versioned image.

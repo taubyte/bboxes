@@ -1,0 +1,13 @@
+[package]
+name = "ping-pong"
+version = "0.1.0"
+description = "ping pong function"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+path = "lib.rs"
+
+[dependencies]
+taubyte-sdk = { git = "https://bitbucket.org/taubyte/rust-sdk" }
+bytes = "1.3.0"

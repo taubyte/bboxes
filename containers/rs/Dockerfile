@@ -1,4 +1,4 @@
-FROM rust:alpine3.16
+FROM rust:alpine3.23
 RUN apk update && apk add bash
 
 RUN apk add clang
@@ -9,11 +9,9 @@ RUN apk add musl-dev
 
 RUN apk add binaryen
 
-RUN apk add compiler-rt compiler-rt-static
+RUN apk add compiler-rt
 
-RUN rustup target add wasm32-wasi
-
-RUN cargo install cargo-wasi
+RUN rustup target add wasm32-wasip1
 
 COPY ./utils /utils
 
