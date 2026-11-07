@@ -1,0 +1,11 @@
+# v1 overlay: the exact current taubyte/go-wasi image plus
+#  - S.11b: wasm.sh without the dead `go run` helper; go generate/2nd tidy only when //go:generate exists; debug_build fixed
+#  - S.11a: warmed Go module and TinyGo caches
+# Build with --build-arg BASE=taubyte/go-wasi@sha256:<v1 digest>.
+ARG BASE=taubyte/go-wasi:latest
+FROM ${BASE}
+
+COPY wasm.sh /utils/wasm.sh
+COPY warm.sh /tmp/warm.sh
+# Runs the real wasm.sh build on a stub importing every go-sdk package, then removes the stub.
+RUN bash /tmp/warm.sh && rm -rf /tmp/warm.sh /src/* /src/.[!.]* /out/* /tmp/*
