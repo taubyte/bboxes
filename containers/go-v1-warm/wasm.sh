@@ -1,4 +1,5 @@
 #!/bin/bash
+# Forked from the v1 go-wasi wasm.sh, not from containers/go/utils/wasm.sh (the reactor build).
 . /utils/common.sh
 
 export CGO_ENABLED=1

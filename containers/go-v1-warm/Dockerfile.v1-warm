@@ -1,8 +1,10 @@
 # v1 overlay: the exact current taubyte/go-wasi image plus
 #  - S.11b: wasm.sh without the dead `go run` helper; go generate/2nd tidy only when //go:generate exists; debug_build fixed
 #  - S.11a: warmed Go module and TinyGo caches
-# Build with --build-arg BASE=taubyte/go-wasi@sha256:<v1 digest>.
-ARG BASE=taubyte/go-wasi:latest
+# wasm.sh here is forked from the v1 script (/utils/_lib_main.go_, no -buildmode=c-shared), not from containers/go,
+# so BASE has no default and must be a v1 image: --build-arg BASE=taubyte/go-wasi@sha256:<v1 digest>.
+# On a reactor-based image it would turn reactor builds back into the old style.
+ARG BASE
 FROM ${BASE}
 
 COPY wasm.sh /utils/wasm.sh

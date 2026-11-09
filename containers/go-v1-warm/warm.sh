@@ -4,7 +4,7 @@ set -e
 . /utils/common.sh
 mkdir -p /tmp/stub && cd /tmp/stub
 printf 'module function\n\ngo 1.19\n' > go.mod
-go get github.com/taubyte/go-sdk@latest
+go get github.com/taubyte/go-sdk@v0.3.9 # pinned so the image does not depend on when it was built
 sdk=$(go list -m -f '{{.Dir}}' github.com/taubyte/go-sdk)
 {
   echo 'package lib'; echo 'import ('
